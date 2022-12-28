@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "my-project-1536739225218",
+  "private_key_id": "958a276cdc97d04c0de7c782eb92e090af88dce4",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC74IrzBy16cVGC\nE+Qa8hcNGrqVGHdRCVQt/tKajFm+fhVIek+UCo8YE+YwlnK/7VQZ5yCi4/2Ej9it\nnY2yhIif0aV8JTr9GJlNqx/55DWO8wRV4sbLcLUkHN4BIR9SiOjDsQh32lAvqd+I\nhO4rz5gdOv5dX70P/q+EBGKmjOKMjJGGx60TEmkiLGMyO7g8YJy3UY+7u3M9ZsFP\np0wtzVNgxA3LczM7VIPkeymp/MSBGPrCxSejT1z/bcak8Pg8tYrbxrLqSXsyo9/I\nvXx1tla5WYtRE7bR13IhD6OlTI4AFTyK6FbCj/6SwLBf8I+UPJbOOD+tu40G7KQN\n0ZPQMI1DAgMBAAECggEADgK8GfeVD/vXZOia1YTsQdFBIiaa70jPevFKlLVBaWVP\nAlgCCzuRBENSTUP1oWkky8cNYK25QDjXTcs2v/NbmkowxHCk/4Q6xSytIR5AUugT\nO1xtZXUtl63Xbc93My575+wR15jzleUIgyPL/H8UtvP+oslQThsOImg5UHZShsHs\nCq6IWbVmFJLopsaPRMdlnwOuARKNmnqRZAdFbe9aYBmaVrDV87/nEyBeUDiShSUR\nj3qlcX+qTHBcIgsUDDVLu/sL22w+G44I51f4lfz5Q3wbkSz7KwQ06F4zNnMg1Wkg\nXZsa/AUuOVPMDUD+kIL/fKPvLlVCBrauh+BtgrD14QKBgQDtgCPFqXKRWQtERUvs\n5uIUM0LQhGGvwweemBqjrhFRQCHrdnz3O3kJRA6rMC0JK8l9s9lsaMvhdToG/0to\n4I7e8zJ5J214pNsUwEeX8XdZWVajqsq1bZHveayzkG+UCh0cMtlaG1/4xwk+wsbA\nTF8T6BfrfUxgpT5RCPsbkNl92QKBgQDKguQjUrHoX8sMVGBxzFzZZ4eNal/xqIbz\nlBId31cAuXH9uFpjAnL0X9nA98rE6ovLLlaS411TTmtPxsrZmk748glSUgbqpOTh\nPWxu1m+1K8TL7O9Y5t70Jjp8va87ysZpZMMk7Ux4RcL3Dw2aisuY6uffTBpeSLX5\n+mGft+4GewKBgFX3bftcLFYkLwnVM3ha0jaRn3uuj1V5eMaVM/9PQIFyf1SlnPI4\nmsUZ111roMGTEenoMakl/bZsIkbqHbemoNBeo0RrWxqyQYKvXrrG8nZq+gtgBOPK\n92oBVtvgSiMBziuo1DfjdMet89C93Ac7Hacs+YuJ3R2WcooOgCYoNjFxAoGBAKmD\nSwguTnFezg4yCtD26bmpqZO8OTeFhAEcLtYGf0NB96MTz8UU5bidCx81y+ttETsw\nPJOT8iirebQ7iM0BF53Wq+rWcqezA0tvKPbWVIdobcDtQaQ/DN19qnOEK8x2/gJ2\nr8qXP+1lJ7+6P/7es3H7H8CQaXoGjx0CcvlI8ttFAoGAXVxzsMrM1KuKjpmJmuJo\nhdEpPueL+YNqjcTsuH3ANLSceUyQgtOnZiE5fwsmHfxMl+YPfBhTIa1Et4GbLril\nWUTYPCxD9TmOJCgRJDHS4RrkSyazLQkQsXVdNNvshEDNvV06tTc74Xg10rkKm+2j\najG5kV4120V/A5zkFuE+Z3o=\n-----END PRIVATE KEY-----\n",
+  "client_email": "uber-payments@my-project-1536739225218.iam.gserviceaccount.com",
+  "client_id": "101452578444856532833",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/uber-payments%40my-project-1536739225218.iam.gserviceaccount.com"
+}
