@@ -8,7 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 
 @Entity
-public class Customer {
+public class Customer { // remove seems it is never used.
 
     @Id
     private Long id;

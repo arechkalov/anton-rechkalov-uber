@@ -25,7 +25,7 @@ public class RegistrationService {
         boolean isValidPhoneNumber = phoneNumberValidator.test(request.getPhoneNumber());
 
         if (!isValidPhoneNumber) {
-            throw new IllegalStateException("phone number not valid");
+            throw new IllegalStateException("phone number not valid"); //use custom validation exception instead with an error message object
         }
 
         return appUserService.signUpUser(
@@ -47,17 +47,17 @@ public class RegistrationService {
                         new IllegalStateException("token not found"));
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("phone number is already confirmed");
+            throw new IllegalStateException("phone number is already confirmed"); //use custom exception
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
+            throw new IllegalStateException("token expired"); // use custom exception
         }
 
         confirmationTokenService.setConfirmedAt(token);
         appUserService.enableAppUser(confirmationToken.getAppUser().getPhoneNumber());
-        return "confirmed";
+        return "confirmed"; // add constant
     }
 }

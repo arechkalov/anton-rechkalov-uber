@@ -12,7 +12,7 @@ import com.ar.uber.web.response.TripInfoDto;
 
 public interface TripService {
 
-    TripCreatedResponse add(TripCreateRequest tripCreateRequest);
+    TripCreatedResponse add(TripCreateRequest tripCreateRequest); // response should be DTO for consistency
 
     List<TripDto> getAll(Long id);
 

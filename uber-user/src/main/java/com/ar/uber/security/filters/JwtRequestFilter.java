@@ -43,7 +43,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             UserDetails userDetails = this.appUserService.loadUserByUsername(username);
 
-            if (jwtUtil.validateToken(authorizationHeader, userDetails)) {
+            if (jwtUtil.validateToken(authorizationHeader, userDetails)) { //change to primitive booleant validateToken method.
 
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());

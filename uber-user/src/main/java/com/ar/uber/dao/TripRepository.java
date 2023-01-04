@@ -11,6 +11,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.ar.uber.model.Trip;
 
+// document methods.
 public interface TripRepository extends CrudRepository<Trip, Long> {
 
     @Lock(LockModeType.OPTIMISTIC_FORCE_INCREMENT)

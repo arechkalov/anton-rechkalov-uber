@@ -17,11 +17,11 @@ public class ConfirmationTokenService {
         confirmationTokenRepository.save(token);
     }
 
-    public Optional<ConfirmationToken> getToken(String token) {
+    public Optional<ConfirmationToken> getToken(String token) { //rename to getConfirmationToken
         return confirmationTokenRepository.findByToken(token);
     }
 
-    public int setConfirmedAt(String token) {
+    public int setConfirmedAt(String token) { // rename to updateConfirmedAtConfirmationToken
         return confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
     }
 }

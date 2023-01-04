@@ -46,7 +46,8 @@ public class TripServiceImpl implements TripService {
 
     @Override
     @Transactional
-    public TripCreatedResponse add(final TripCreateRequest tripCreateRequest) {
+    // change the response and request to DTOs for consistency.
+    public TripCreatedResponse add(final TripCreateRequest tripCreateRequest) { //rename method to create
         final Payment payment = Payment.builder()
                 .correlationId(UUID.randomUUID().toString())
                 .price(tripCreateRequest.getInitialPrice())
@@ -70,14 +71,14 @@ public class TripServiceImpl implements TripService {
     @Transactional
     public List<TripDto> getAll(final Long id) {
         final List<Trip> trips = tripRepository.findAllByDriverId(id);
-        return trips.stream()
+        return trips.stream()   // remove redundant stream and inline the list of trips into stream tripRepository.findAllByDriverId(id).stream()...
                 .map(tripConverter::convert)
                 .collect(toList());
     }
 
     @Override
     @Transactional
-    public TripInfoDto acquireTrip(final AppUser appUser, final Long tripId) {
+    public TripInfoDto acquireTrip(final AppUser appUser, final Long tripId) { // make one object instead of these arguments
         final Trip trip;
         try {
             trip = tripRepository.findOneOptimistic(tripId)
@@ -87,7 +88,7 @@ public class TripServiceImpl implements TripService {
             throw new TripAlreadyAcquiredException();
         }
 
-        if (TripStatus.ACQUIRED.equals(trip.getStatus())) {
+        if (TripStatus.ACQUIRED.equals(trip.getStatus())) { // make this validation in dedicated service
             throw new TripAlreadyAcquiredException();
         }
 
@@ -95,7 +96,7 @@ public class TripServiceImpl implements TripService {
         trip.setStatus(TripStatus.ACQUIRED);
         trip.setStartTime(ZonedDateTime.now());
 
-        return TripInfoDto.builder()
+        return TripInfoDto.builder() //make this conversion in dedicated service
                 .driverPhoneNumber(appUser.getPhoneNumber())
                 .tripId(tripId)
                 .reward(trip.getPayment().getReward())
@@ -118,7 +119,7 @@ public class TripServiceImpl implements TripService {
         trip.setStatus(TripStatus.ABORTED);
         trip.setEndTime(ZonedDateTime.now());
 
-        return TripInfoDto.builder()
+        return TripInfoDto.builder() //make this conversion in dedicated service
                 .driverPhoneNumber(trip.getDriver().getAppUser().getPhoneNumber())
                 .tripId(trip.getId())
                 .price(trip.getPayment().getPrice())
@@ -133,11 +134,11 @@ public class TripServiceImpl implements TripService {
     @Transactional
     public TripInfoDto confirmTrip(final AppUser appUser, final Long tripId,
             final BigDecimal finalAmount,
-            final DriverRating driverRating) {
+            final DriverRating driverRating) { // aggregate all arguments into one object
         final Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(EntityNotFoundException::new);
 
-        if (TripStatus.COMPLETED.equals(trip.getStatus())) {
+        if (TripStatus.COMPLETED.equals(trip.getStatus())) { //extract to validation method
             throw new TripAlreadyFinishedException();
         }
         //check if this trip belongs to current driver
@@ -150,7 +151,7 @@ public class TripServiceImpl implements TripService {
         trip.setEndTime(ZonedDateTime.now());
         trip.getPayment().setPrice(finalAmount);
 
-        return TripInfoDto.builder()
+        return TripInfoDto.builder() // make this conversion in dedicated service
                 .driverPhoneNumber(appUser.getPhoneNumber())
                 .tripId(tripId)
                 .reward(trip.getPayment().getReward())

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-@Transactional(readOnly = true)
+@Transactional(readOnly = true) //remove readonly as it updates
 public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationToken, Long> {
 
     Optional<ConfirmationToken> findByToken(String token);

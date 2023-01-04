@@ -37,6 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/trips")
 @RequiredArgsConstructor
 @Slf4j
+// Add swagger and java documentations for all public methods
+//Use @ControllerAdvice and create custom ApiError.class and Http.Status response for negative scenarios such as EntityNotFound, UserNotFound etc. exceptions.
 public class TripController {
 
     private final TripService tripService;
@@ -44,6 +46,7 @@ public class TripController {
     private final PaymentService paymentService;
 
     @GetMapping
+    // wrap return type to TripsResponse and rename it into GetAllTripsResponse
     public ResponseEntity<TripsResponse> getAll() {
         final AppUser appUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final List<TripDto> tripsResponse = tripService.getAll(appUser.getId());
@@ -52,14 +55,17 @@ public class TripController {
     }
 
     @PostMapping
-    public ResponseEntity<TripCreatedResponse> addTrip(@RequestBody TripCreateRequest tripCreateRequest) {
+    // wrap return type to TripCreatedResponse and rename it into TripCreatedResponse
+    // rename method to createTrip
+    public ResponseEntity<TripCreatedResponse> addTrip(@RequestBody TripCreateRequest tripCreateRequest) { // rename request to TripCreateRequest
         final TripCreatedResponse tripCreatedResponse = tripService.add(tripCreateRequest);
         return new ResponseEntity<>(tripCreatedResponse, CREATED);
     }
 
     @PutMapping(value = "{tripId}/acquisition")
-    public ResponseEntity<TripInfoDto> acquireTrip(@PathVariable Long tripId) {
+    public ResponseEntity<TripInfoDto> acquireTrip(@PathVariable Long tripId) { // wrap return type into AcquireTripInfoResponse
         final AppUser appUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // move this logic to circuitBreakerService.
         final TripInfoDto tripinfoDto = tripService.acquireTrip(appUser, tripId);
         final Payment payment = paymentService.get(tripinfoDto.getPaymentCorrelationId()); //TODO add DTO
         final HttpEntity<PaymentAuthorizationRequest> requestHttpEntity = new HttpEntity<>(PaymentAuthorizationRequest.builder()
@@ -68,14 +74,16 @@ public class TripController {
                 .amount(payment.getPrice())
                 .customerAccountNumber(payment.getCustomerAccountNumber())
                 .paymentInitiationTime(ZonedDateTime.now())
-                .callBackUrl("http://localhost:8080/api/v1/payments/" + tripinfoDto.getPaymentCorrelationId() + "/authorization")
+                .callBackUrl("http://localhost:8080/api/v1/payments/" + tripinfoDto.getPaymentCorrelationId() + "/authorization") //externalize all url Strings into environment properties
                 .build());
         circuitBreakerService.resilientSendAuthorizationCallbackRequest(tripinfoDto, requestHttpEntity);
         return new ResponseEntity<>(tripinfoDto, OK);
     }
 
     @PutMapping(value = "{tripId}/confirmation")
-    public ResponseEntity<TripInfoDto> confirmTrip(@PathVariable Long tripId, @RequestBody TripCompletionRequest tripCompletionRequest) {
+    // wrap return type into ConfirmTripInfoResponse
+    public ResponseEntity<TripInfoDto> confirmTrip(@PathVariable Long tripId, @RequestBody TripCompletionRequest tripCompletionRequest) { //rename TripCompletionRequest => ConfirmTripCompletionRequest rename method to confirmTripCompletion
+        // move this logic to cirquitBreakerService
         final AppUser appUser = (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final TripInfoDto trip = tripService.confirmTrip(appUser, tripId, tripCompletionRequest.getFinalAmount(), tripCompletionRequest.getDriverRating());
         circuitBreakerService.resilientSendConfirmationCallbackRequest(trip.getPaymentCorrelationId(), tripCompletionRequest);

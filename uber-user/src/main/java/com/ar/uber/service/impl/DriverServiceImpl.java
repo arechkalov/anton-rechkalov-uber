@@ -39,6 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+// add logging events for each public method.
 public class DriverServiceImpl implements DriverService {
 
     private final DriverRepository driverRepository;
@@ -49,7 +50,7 @@ public class DriverServiceImpl implements DriverService {
     public void update(final Long id, final VehicleCreateRequest vehicleCreateRequest) {
         final Driver driver = driverRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("Driver id not found"));
-        final Vehicle vehicle = Vehicle.builder()
+        final Vehicle vehicle = Vehicle.builder()  //extract creation to separate service
                 .color(vehicleCreateRequest.getColour())
                 .name(vehicleCreateRequest.getName())
                 .registeredAt(ZonedDateTime.now())
@@ -60,7 +61,8 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public DriverProfileDto getStatistics(final String phoneNumber) {
+    //method is too complex reduce by breaking it into smaller methods.
+    public DriverProfileDto getStatistics(final String phoneNumber) { //rename to getDriversStatistics
         Driver driver = driverRepository.findByAppUserPhoneNumber(phoneNumber)
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -68,23 +70,23 @@ public class DriverServiceImpl implements DriverService {
                 .filter(trip -> trip.getStatus().equals(TripStatus.COMPLETED))
                 .collect(toList());
 
-        Float ratingSum = finishedTrips.stream()
+        Float ratingSum = finishedTrips.stream() // extract as a method named getRatingSum
                 .map(trip -> trip.getDriverRating().getRating())
-                .reduce(0F, Float::sum);
-        BigDecimal tripCostSum = finishedTrips.stream()
+                .reduce(0F, Float::sum); // extract 0F as a constant with meaningful name
+        BigDecimal tripCostSum = finishedTrips.stream()// extract as a method named tripCostsSum
                 .map(trip -> trip.getPayment().getPrice().add(trip.getPayment().getReward()))
                 .reduce(BigDecimal.ZERO, (BigDecimal::add));
 
-        float averageRating = 0F;
-        BigDecimal averageTripCost = BigDecimal.ZERO;
-        if (finishedTrips.size() > 0) {
+        float averageRating = 0F; // extract 0F as a constant with meaningful name and reuse
+        BigDecimal averageTripCost = BigDecimal.ZERO; // extract as a method named getAverageTripCost
+        if (finishedTrips.size() > 0) { // use finishedTrips.isEmpty() instead
             averageRating = ratingSum / finishedTrips.size();
-            averageTripCost = tripCostSum.divide(BigDecimal.valueOf(finishedTrips.size()), 2, RoundingMode.HALF_EVEN);
-        }
+            averageTripCost = tripCostSum.divide(BigDecimal.valueOf(finishedTrips.size()), 2, RoundingMode.HALF_EVEN);// extract 2 as a constant with meaningful name
+        } //add an else statement if there are no trips yet.
 
         Vehicle vehicle = driver.getVehicle();
 
-        return DriverProfileDto.builder()
+        return DriverProfileDto.builder() //make this conversion in dedicated service
                 .driver(DriverDto.builder()
                         .phoneNumber(phoneNumber)
                         .firstName(driver.getAppUser().getFirstName())
@@ -93,11 +95,11 @@ public class DriverServiceImpl implements DriverService {
                 .avgTripPrice(averageTripCost)
                 .ratingScore(averageRating)
                 .vehicles(Collections.singleton(vehicle))
-                .build();//TODO use audit history with hibernate envers
+                .build(); //TODO use audit history with hibernate envers
     }
 
     @Override
-    public DailyAnalytics getAnalytics(final String phoneNumber) {
+    public DailyAnalytics getAnalytics(final String phoneNumber) { // rename to getDriversAnalytics
         final Driver driver = driverRepository.findByAppUserPhoneNumber(phoneNumber)
                 .orElseThrow(EntityNotFoundException::new);
         List<Trip> trips = driver.getTrips();
@@ -108,7 +110,7 @@ public class DriverServiceImpl implements DriverService {
 
         return DailyAnalytics.builder()
                 .days(daysDto)
-                .averageCostPerTrip(totalPriceForAllTrips.divide(BigDecimal.valueOf(sortedList.size()), 2, RoundingMode.HALF_EVEN))
+                .averageCostPerTrip(totalPriceForAllTrips.divide(BigDecimal.valueOf(sortedList.size()), 2, RoundingMode.HALF_EVEN)) //extract 2 with meaningful name as a string constant.
                 .build();
     }
 
@@ -118,7 +120,7 @@ public class DriverServiceImpl implements DriverService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private List<Day> buildDaysDto(final List<DailyTrips> days) {
+    private List<Day> buildDaysDto(final List<DailyTrips> days) { // extract this method to another service
         final List<Day> daysDto = new ArrayList<>();
         for (final DailyTrips day : days) {
             final List<Trip> tripsPerDay = day.getTrips();
@@ -144,7 +146,7 @@ public class DriverServiceImpl implements DriverService {
                 .orElseThrow(TripNotFoundForCurrentUserException::new);
         LocalDate previousTripDate = first.getEndTime().toLocalDate();
         final List<DailyTrips> days = new ArrayList<>();
-        for (final Trip trip : sortedList) {
+        for (final Trip trip : sortedList) { // simplify this foreach block by segregating if statements to multiple methods
             final LocalDate nextTripDate = trip.getEndTime().toLocalDate();
             if (previousTripDate.equals(nextTripDate)) {
                 if (days.isEmpty()) {
@@ -155,7 +157,7 @@ public class DriverServiceImpl implements DriverService {
 
                 } else {
                     // get last updated element and add trip
-                    days.get(days.size() - 1).getTrips().add(trip);
+                    days.get(days.size() - 1).getTrips().add(trip); // extract this statement to method.
                 }
             } else {
                 previousTripDate = nextTripDate;

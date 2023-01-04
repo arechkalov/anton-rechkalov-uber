@@ -20,14 +20,16 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "api/v1")
+// Add swagger and java documentations for all public methods
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
     private final AppUserService appUserService;
     private final JwtUtil jwtTokenUtil;
 
-    @RequestMapping(value = "authentication", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    @RequestMapping(value = "authentication", method = RequestMethod.POST) // replace with RequestMapping.POST.
+    // rename AuthenticationRequest => CreateAuthenticationRequest
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception { // create wrap and return CreateAuthenticationTokenResponse as return type add annotation ResponseStatus Ok.
 
         try {
             authenticationManager.authenticate(
@@ -35,7 +37,7 @@ public class AuthenticationController {
             );
         }
         catch (BadCredentialsException e) {
-            throw new Exception("Incorrect username or password", e);
+            throw new Exception("Incorrect username or password", e); //remove try/catch block and catch exception in ControllerAdvice, or rethrow dedicated custom exception and handle it in ControllerAdvice.
         }
 
         final UserDetails userDetails = appUserService.loadUserByUsername(authenticationRequest.getPhoneNumber());
