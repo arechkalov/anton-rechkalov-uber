@@ -19,7 +19,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class AppUserService implements UserDetailsService {
 
-    private final static String USER_NOT_FOUND_MSG = "user with phone number %s not found";
+    private final static String USER_NOT_FOUND_MSG = "user with phone number %s not found"; // public static final
 
     private final AppUserRepository appUserRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;

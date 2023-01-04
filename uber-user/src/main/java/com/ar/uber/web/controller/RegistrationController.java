@@ -18,17 +18,20 @@ import lombok.AllArgsConstructor;
 @RestController
 @RequestMapping(path = "api/v1/registration")
 @AllArgsConstructor
+// Add swagger and java documentations for all public methods
+//Use @ControllerAdvice and create custom ApiError.class and Http.Status response for negative scenarios such as EntityNotFound, UserNotFound etc. exceptions.
 public class RegistrationController {
 
     private final RegistrationService registrationService;
 
     @PostMapping
-    public ResponseEntity<String> register(@RequestBody RegistrationRequest request) {
+    //rename RegistrationRequest => RegisterRequest
+    public ResponseEntity<String> register(@RequestBody RegistrationRequest request) { // wrap return type into RegistrationResponse with value object of created URI.
         return ResponseEntity.created(URI.create(registrationService.register(request))).build();
     }
 
-    @GetMapping(path = "confirmation")
-    public ResponseEntity<String> confirm(@RequestParam("token") String token) {
+    @GetMapping(path = "confirmation") // Use put mapping instead of get, make method void and use annotation @ResponseStatus with OK instead of returning ResponseEntity.
+    public ResponseEntity<String> confirm(@RequestParam("token") String token) { // wrap token into ConfirmRegistrationRequest and wrap into it value object RegistrationToken
         return ResponseEntity.ok(registrationService.confirmToken(token));
     }
 

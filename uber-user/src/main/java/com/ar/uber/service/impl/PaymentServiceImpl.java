@@ -21,7 +21,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public void updatePayment(final String correlationId, final PaymentStatus paymentStatus) {
+    public void updatePayment(final String correlationId, final PaymentStatus paymentStatus) { // make an object instead of these arguments
         log.info("updating status of current payment");
         Payment payment = paymentRepository.getByCorrelationId(correlationId)
                 .orElseThrow(EntityNotFoundException::new);
@@ -30,7 +30,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public Payment get(final String correlationId) {
+    public Payment get(final String correlationId) { // return type should not be entity. create a model for payment.
         return paymentRepository.getByCorrelationId(correlationId)
                 .orElseThrow(EntityNotFoundException::new);
     }

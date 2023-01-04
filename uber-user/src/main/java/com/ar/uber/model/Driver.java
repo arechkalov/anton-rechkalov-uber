@@ -1,5 +1,6 @@
 package com.ar.uber.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +33,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id") //refactor equals and hashcode using @AppUser example.
 @ToString(of = "id")
 @EntityListeners(AuditingEntityListener.class)
-public class Driver {
+public class Driver implements Serializable {
 
     @Id
     private Long id;

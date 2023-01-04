@@ -2,6 +2,7 @@ package com.ar.uber.appuser;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,20 +19,20 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ar.uber.model.Driver;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode
+//replace the equals and hashcode with recommended code.
 @NoArgsConstructor
 @Entity
 @Table(
@@ -55,7 +56,7 @@ public class AppUser implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
-    private Driver driver;
+    private Driver driver; //Make Driver Serializable
 
     @Column(name = "phone_number", nullable = false, unique = true)
     @NotNull(message = "phoneNumber can not be null!")
@@ -66,7 +67,7 @@ public class AppUser implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private AppUserRole appUserRole;
-    private Boolean enabled = false;
+    private Boolean enabled;
     private Boolean locked = false;
 
     public AppUser(String firstName,
@@ -116,5 +117,18 @@ public class AppUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        AppUser appUser = (AppUser) o;
+        return id != null && Objects.equals(id, appUser.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }
